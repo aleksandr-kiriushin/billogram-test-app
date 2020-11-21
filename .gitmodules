@@ -1,0 +1,3 @@
+[submodule "backend/libs/billogram_api_async"]
+	path = backend/libs/billogram_api_async
+	url = git@github.com:aleksandr-kiriushin/billogram-v2-api-python-lib
