@@ -2,11 +2,16 @@
 
 import asyncio
 
-from backend.src import settings
+import aiohttp.web
 from billogram_api import BillogramAPI
 
+from backend.src import settings
 
-async def main():
+routes = aiohttp.web.RouteTableDef()
+
+@routes.get('/customers')
+async def customers_handler(request):  # pylint: disable=unused-argument
+    customers = []
     async with BillogramAPI(
             settings.API_USER,
             settings.API_PASSWORD,
@@ -15,8 +20,12 @@ async def main():
 
         query = api.customers.query()
         async for customer in query.iter_all():
-            print(await customer.data())
+            customer = await customer.data()
+            customers.append(customer)
+    return aiohttp.web.json_response(customers)
+
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    app = aiohttp.web.Application()
+    app.router.add_routes(routes)
+    aiohttp.web.run_app(app, port=settings.SERVER_PORT)
