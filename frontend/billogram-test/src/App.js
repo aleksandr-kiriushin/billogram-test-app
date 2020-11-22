@@ -23,15 +23,18 @@ class App extends Component {
   }
 
   render() {
+    const style = {
+      display: 'flex',
+      flexWrap: 'wrap'
+    };
     const customers = this.state.customers.map((customer, index) => {
       console.log(customer);
       return <Customer data={JSON.stringify(customer)} key={index} />
     });
-    console.log(customers);
     return (
-      <Fragment>
+      <div style={style}>
         {customers}
-      </Fragment>
+      </div>
     )
   }
 }
