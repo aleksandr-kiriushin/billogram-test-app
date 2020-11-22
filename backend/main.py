@@ -1,6 +1,6 @@
 """ App for test Billogram API """
 
-import asyncio
+import logging
 
 import aiohttp.web
 from billogram_api import BillogramAPI
@@ -22,10 +22,13 @@ async def customers_handler(request):  # pylint: disable=unused-argument
         async for customer in query.iter_all():
             customer = await customer.data()
             customers.append(customer)
-    return aiohttp.web.json_response(customers)
+    return aiohttp.web.json_response(customers, headers={
+        'Access-Control-Allow-Origin': '*'
+    })
 
 
 if __name__ == '__main__':
     app = aiohttp.web.Application()
     app.router.add_routes(routes)
+    logging.basicConfig(level=logging.DEBUG)
     aiohttp.web.run_app(app, port=settings.SERVER_PORT)
